@@ -10,7 +10,7 @@ jobs:
 #         default: main
       semgrep_deployment_id:
         type: integer
-        default: *my deployment id*
+        default: 1
 #     environment:
 #       SEMGREP_REPO_NAME: << parameters.repo_path >>
 #       SEMGREP_REPO_URL: << pipeline.project.git_url >>
@@ -25,7 +25,7 @@ jobs:
             python -m semgrep_agent \
               --publish-deployment << parameters.semgrep_deployment_id >> \
               --publish-token $SEMGREP_APP_TOKEN \
-              --baseline-ref << parameters.default_branch >>
+              --baseline-ref test
 
 workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
