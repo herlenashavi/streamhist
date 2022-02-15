@@ -4,17 +4,17 @@ jobs:
     parameters:
       repo_path:
         type: string
-        default: myorg/semgrep-test-repo
+        default: herlenashavi/streamhist
 #       default_branch:
 #         type: string
 #         default: main
       semgrep_deployment_id:
         type: integer
         default: *my deployment id*
-    environment:
-      SEMGREP_REPO_NAME: << parameters.repo_path >>
-      SEMGREP_REPO_URL: << pipeline.project.git_url >>
-      SEMGREP_BRANCH: << pipeline.git.branch >>
+#     environment:
+#       SEMGREP_REPO_NAME: << parameters.repo_path >>
+#       SEMGREP_REPO_URL: << pipeline.project.git_url >>
+#       SEMGREP_BRANCH: << pipeline.git.branch >>
     docker:
       - image: returntocorp/semgrep-agent:v1
     steps:
