@@ -4,40 +4,28 @@ jobs:
     parameters:
       repo_path:
         type: string
-        default: herlenashavi/streamhist
+        default: myorg/semgrep-test-repo
 #       default_branch:
 #         type: string
-#         default: master
+#         default: main
+      semgrep_deployment_id:
+        type: integer
+        default: *my deployment id*
     environment:
-      SEMGREP_RULES: >- # more at semgrep.dev/explore
-        p/security-audit
-        p/secrets
-      # Scan changed files in PRs, block on new issues only (existing issues ignored)
-#       SEMGREP_BASELINE_REF: << parameters.default_branch >>
-
-    # == Optional settings in the `environment:` block
-
-    # Instead of `SEMGREP_RULES:`, use rules set in Semgrep App.
-    # Get your token from semgrep.dev/manage/settings.
-      SEMGREP_APP_TOKEN: $SEMGREP_APP_TOKEN
-    #   SEMGREP_REPO_NAME: << parameters.repo_path >>
-    #   SEMGREP_REPO_URL: << pipeline.project.git_url >>
-    #   SEMGREP_BRANCH: << pipeline.git.branch >>
-
-    # Never fail the build due to findings.
-    # Instead, just collect findings for semgrep.dev/manage/findings
-    #   SEMGREP_AUDIT_ON: unknown
-
-    # Change job timeout (default is 1800 seconds; set to 0 to disable)
-    #   SEMGREP_TIMEOUT: 300
-
+      SEMGREP_REPO_NAME: << parameters.repo_path >>
+      SEMGREP_REPO_URL: << pipeline.project.git_url >>
+      SEMGREP_BRANCH: << pipeline.git.branch >>
     docker:
       - image: returntocorp/semgrep-agent:v1
     steps:
       - checkout
       - run:
           name: "Semgrep scan"
-          command: semgrep-agent
+          command: |
+            python -m semgrep_agent \
+              --publish-deployment << parameters.semgrep_deployment_id >> \
+              --publish-token $SEMGREP_APP_TOKEN \
+              --baseline-ref << parameters.default_branch >>
 
 workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
